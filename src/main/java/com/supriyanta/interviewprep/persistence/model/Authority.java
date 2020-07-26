@@ -1,4 +1,4 @@
-package com.supriyanta.interviewprep.persisteance.model;
+package com.supriyanta.interviewprep.persistence.model;
 
 import lombok.Getter;
 import lombok.Setter;
@@ -6,7 +6,6 @@ import lombok.Setter;
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
 import java.io.Serializable;
-import java.util.Collection;
 import java.util.Set;
 
 @Entity

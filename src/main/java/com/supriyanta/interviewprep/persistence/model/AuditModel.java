@@ -1,4 +1,4 @@
-package com.supriyanta.interviewprep.persisteance.model;
+package com.supriyanta.interviewprep.persistence.model;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.Getter;

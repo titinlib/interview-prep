@@ -1,8 +1,7 @@
 package com.supriyanta.interviewprep.security;
 
-import com.supriyanta.interviewprep.persisteance.model.AccountUser;
-import com.supriyanta.interviewprep.persisteance.repository.AccountUserRepository;
-import com.supriyanta.interviewprep.security.MyUserDetails;
+import com.supriyanta.interviewprep.persistence.model.AccountUser;
+import com.supriyanta.interviewprep.persistence.repository.AccountUserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;

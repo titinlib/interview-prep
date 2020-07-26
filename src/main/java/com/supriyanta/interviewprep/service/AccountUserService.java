@@ -1,15 +1,21 @@
 package com.supriyanta.interviewprep.service;
 
 import com.supriyanta.interviewprep.dto.UserDto;
-import com.supriyanta.interviewprep.persisteance.model.AccountUser;
-import com.supriyanta.interviewprep.persisteance.repository.AccountUserRepository;
+import com.supriyanta.interviewprep.persistence.model.AccountUser;
+import com.supriyanta.interviewprep.persistence.repository.AccountUserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import javax.transaction.Transactional;
 import java.util.Optional;
 
 @Service
+@Transactional
 public class AccountUserService {
+
+    @Autowired
+    private PasswordEncoder passwordEncoder;
 
     @Autowired
     private AccountUserRepository accountUserRepository;
@@ -22,7 +28,7 @@ public class AccountUserService {
         saveUser.setEmail(user.getEmail());
         saveUser.setName(user.getName());
         // TODO: encode password
-        saveUser.setPassword(user.getPassword());
+        saveUser.setPassword(passwordEncoder.encode(user.getPassword()));
 
         return accountUserRepository.save(saveUser);
     }

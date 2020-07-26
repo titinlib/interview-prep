@@ -1,7 +1,6 @@
 package com.supriyanta.interviewprep.dto;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.supriyanta.interviewprep.persisteance.model.AccountUser;
+import com.supriyanta.interviewprep.persistence.model.AccountUser;
 import lombok.Getter;
 import lombok.Setter;
 

@@ -1,8 +1,8 @@
 package com.supriyanta.interviewprep.security;
 
-import com.supriyanta.interviewprep.persisteance.model.AccountUser;
-import com.supriyanta.interviewprep.persisteance.model.Authority;
-import com.supriyanta.interviewprep.persisteance.model.Role;
+import com.supriyanta.interviewprep.persistence.model.AccountUser;
+import com.supriyanta.interviewprep.persistence.model.Authority;
+import com.supriyanta.interviewprep.persistence.model.Role;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
