@@ -7,7 +7,8 @@ import javax.persistence.*;
 import javax.validation.constraints.Email;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
-import java.util.Set;
+import java.util.ArrayList;
+import java.util.List;
 
 @Entity
 @Table(name = "users")
@@ -32,11 +33,11 @@ public class AccountUser extends AuditModel {
 
     private boolean enabled;
 
-    @ManyToMany(cascade = { CascadeType.MERGE, CascadeType.PERSIST })
+    @ManyToMany(cascade = {CascadeType.MERGE, CascadeType.PERSIST})
     @JoinTable(name = "user_roles",
             joinColumns = @JoinColumn(name = "user_id"),
             inverseJoinColumns = @JoinColumn(name = "role_id"))
-    private Set<Role> roles;
+    private List<Role> roles = new ArrayList<>();
 
     public AccountUser(String name, String email, String password) {
         this.name = name;
@@ -45,7 +46,7 @@ public class AccountUser extends AuditModel {
     }
 
     public AccountUser() {
-        this.enabled = false;
+        this.enabled = true;
     }
 
     public AccountUser(AccountUser user) {

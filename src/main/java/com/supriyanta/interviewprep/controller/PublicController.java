@@ -10,4 +10,9 @@ public class PublicController {
     public String hello() {
         return "Hello from the sky";
     }
+
+    @GetMapping("/test")
+    public String authTest() {
+        return "Auth testing from the sky";
+    }
 }

@@ -6,7 +6,8 @@ import lombok.Setter;
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
 import java.io.Serializable;
-import java.util.Set;
+import java.util.ArrayList;
+import java.util.List;
 
 @Entity
 @Table(name = "authorities")
@@ -20,8 +21,8 @@ public class Authority implements Serializable {
     @NotNull
     private String name;
 
-    @ManyToMany(mappedBy = "authorities", cascade = { CascadeType.MERGE, CascadeType.PERSIST })
-    private Set<Role> roles;
+    @ManyToMany(mappedBy = "authorities", cascade = {CascadeType.MERGE, CascadeType.PERSIST})
+    private List<Role> roles = new ArrayList<>();
 
     public Authority() {
     }
