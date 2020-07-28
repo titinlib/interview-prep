@@ -1,5 +1,6 @@
 package com.supriyanta.interviewprep.service;
 
+import com.supriyanta.interviewprep.dto.ResponseDto;
 import com.supriyanta.interviewprep.dto.UserDto;
 import com.supriyanta.interviewprep.persistence.model.AccountUser;
 import com.supriyanta.interviewprep.persistence.repository.AccountUserRepository;
@@ -13,6 +14,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
+import java.util.List;
 import java.util.Optional;
 
 @Slf4j
@@ -64,5 +66,14 @@ public class AccountUserService {
         } catch (Exception exception) {
             log.warn("exception in user controller", exception);
         }
+    }
+
+    public Optional<AccountUser> findUserByEmail(String email) {
+        return accountUserRepository.findByEmail(email);
+    }
+
+    // TODO: use PreAuthorize before accessing this method
+    public List<AccountUser> findAllUser() {
+        return accountUserRepository.findAll();
     }
 }

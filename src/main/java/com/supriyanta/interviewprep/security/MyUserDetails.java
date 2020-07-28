@@ -11,6 +11,7 @@ import javax.transaction.Transactional;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
+import java.util.Set;
 
 @Transactional
 public class MyUserDetails extends AccountUser implements UserDetails {
@@ -33,7 +34,7 @@ public class MyUserDetails extends AccountUser implements UserDetails {
         return null;
     }
 
-    private Collection<? extends GrantedAuthority> getAuthoritiesFromRoles(List<Role> roles) {
+    private Collection<? extends GrantedAuthority> getAuthoritiesFromRoles(Set<Role> roles) {
         List<GrantedAuthority> grantedAuthorities = new ArrayList<>();
 
         for (Role role : roles) {

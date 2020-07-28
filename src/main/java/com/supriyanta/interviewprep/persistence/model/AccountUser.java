@@ -8,7 +8,9 @@ import javax.validation.constraints.Email;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 @Entity
 @Table(name = "users")
@@ -33,11 +35,11 @@ public class AccountUser extends AuditModel {
 
     private boolean enabled;
 
-    @ManyToMany(cascade = {CascadeType.MERGE, CascadeType.PERSIST})
+    @ManyToMany(cascade = { CascadeType.MERGE, CascadeType.PERSIST })
     @JoinTable(name = "user_roles",
             joinColumns = @JoinColumn(name = "user_id"),
             inverseJoinColumns = @JoinColumn(name = "role_id"))
-    private List<Role> roles = new ArrayList<>();
+    private Set<Role> roles = new HashSet<>();
 
     public AccountUser(String name, String email, String password) {
         this.name = name;
@@ -45,6 +47,7 @@ public class AccountUser extends AuditModel {
         this.password = password;
     }
 
+    // TODO: change default to false
     public AccountUser() {
         this.enabled = true;
     }

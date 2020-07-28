@@ -2,6 +2,7 @@ package com.supriyanta.interviewprep.security;
 
 import com.supriyanta.interviewprep.persistence.model.AccountUser;
 import com.supriyanta.interviewprep.persistence.repository.AccountUserRepository;
+import com.supriyanta.interviewprep.service.AccountUserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
@@ -14,11 +15,11 @@ import java.util.Optional;
 public class MyUserDetailsService implements UserDetailsService {
 
     @Autowired
-    private AccountUserRepository accountUserRepository;
+    private AccountUserService accountUserService;
 
     @Override
     public UserDetails loadUserByUsername(String email) throws UsernameNotFoundException {
-        Optional<AccountUser> userFound = accountUserRepository.findByEmail(email);
+        Optional<AccountUser> userFound = accountUserService.findUserByEmail(email);
 
         AccountUser user = userFound.orElseThrow(() ->
                 new UsernameNotFoundException("User with the email " + email + " not found"));

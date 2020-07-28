@@ -1,6 +1,7 @@
 package com.supriyanta.interviewprep.controller;
 
 import com.supriyanta.interviewprep.dto.JwtDto;
+import com.supriyanta.interviewprep.dto.ResponseDto;
 import com.supriyanta.interviewprep.dto.UserDto;
 import com.supriyanta.interviewprep.dto.UserResponseDto;
 import com.supriyanta.interviewprep.event.UserRegistrationEvent;
@@ -10,14 +11,16 @@ import com.supriyanta.interviewprep.service.AccountUserService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationEventPublisher;
+import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
+import java.util.List;
 
-@Slf4j
 @RestController
 @RequestMapping("/auth")
-public class AccountUserController {
+@Slf4j
+public class AuthController {
 
     @Autowired
     private ApplicationEventPublisher applicationEventPublisher;
@@ -25,9 +28,18 @@ public class AccountUserController {
     @Autowired
     private AccountUserService accountUserService;
 
+    // TODO: Delete after testing
     @GetMapping("/hello")
-    public String testing() {
-        return "Tested!";
+    public ResponseDto<List<AccountUser>> getAllUser() {
+        List<AccountUser> users = accountUserService.findAllUser();
+        return new ResponseDto<>(users, HttpStatus.ACCEPTED);
+    }
+
+    @GetMapping("/hello/{email}")
+    public ResponseDto<AccountUser> testing(@PathVariable String email) throws Exception {
+        AccountUser user = accountUserService.findUserByEmail(email)
+                                    .orElseThrow(Exception::new);
+        return new ResponseDto<>(user);
     }
 
     @PostMapping("/signup")
