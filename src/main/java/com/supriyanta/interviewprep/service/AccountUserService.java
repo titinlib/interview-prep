@@ -9,7 +9,9 @@ import com.supriyanta.interviewprep.util.JwtUtil;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.Authentication;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -27,6 +29,9 @@ public class AccountUserService {
 
     @Autowired
     private PasswordEncoder passwordEncoder;
+
+    @Autowired
+    private JwtUtil jwtUtil;
 
     @Autowired
     private AccountUserRepository accountUserRepository;
@@ -52,20 +57,21 @@ public class AccountUserService {
 
     public String authenticateUser(UsernameAndPasswordRequest authRequest) {
         authenticateRequest(authRequest);
-        String jwtToken = JwtUtil.generateNewJwtToken(authRequest.getEmail());
+        String jwtToken = jwtUtil.generateNewJwtToken(authRequest.getEmail());
         return jwtToken;
     }
 
     private void authenticateRequest(UsernameAndPasswordRequest authRequest) {
-        try {
-            authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(
+
+            Authentication authentication = authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(
                     authRequest.getEmail(),
                     authRequest.getPassword()
             ));
+            log.info(authentication.toString());
 
-        } catch (Exception exception) {
-            log.warn("exception in user controller", exception);
-        }
+            if(authentication.isAuthenticated() != true) {
+                throw new BadCredentialsException("Bad Credentials");
+            }
     }
 
     public Optional<AccountUser> findUserByEmail(String email) {

@@ -11,27 +11,45 @@ import java.util.Date;
 public class ResponseDto<T> {
     private T body;
 
-    private final Date timestamp;
+    private Date timestamp;
 
-    private HttpStatus httpStatus;
+    private Integer status;
+
+    private String message;
 
     public ResponseDto() {
-        timestamp = new Date();
+        this.timestamp = new Date();
+
+        this.body = (T) "Not available";
+
+        HttpStatus httpStatus = HttpStatus.OK;
+
+        this.status = httpStatus.value();
+        this.message = httpStatus.getReasonPhrase();
     }
 
     public ResponseDto(T body) {
+        this.timestamp = new Date();
         this.body = body;
-        timestamp = new Date();
+
+        HttpStatus httpStatus = HttpStatus.OK;
+
+        this.status = httpStatus.value();
+        this.message = httpStatus.getReasonPhrase();
     }
 
     public ResponseDto(HttpStatus httpStatus) {
-        this.httpStatus = httpStatus;
-        timestamp = new Date();
+        this.timestamp = new Date();
+        this.status = httpStatus.value();
+        this.message = httpStatus.getReasonPhrase();
+
+        this.body = (T) "Not available";
     }
 
     public ResponseDto(T body, HttpStatus httpStatus) {
+        this.timestamp = new Date();
         this.body = body;
-        this.httpStatus = httpStatus;
-        timestamp = new Date();
+        this.status = httpStatus.value();
+        this.message = httpStatus.getReasonPhrase();
     }
 }

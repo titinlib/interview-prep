@@ -1,9 +1,11 @@
 package com.supriyanta.interviewprep.util;
 
+import com.supriyanta.interviewprep.constants.JwtConstants;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jws;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.security.Keys;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import javax.crypto.SecretKey;
@@ -15,29 +17,26 @@ import java.util.Date;
 @Component
 public class JwtUtil {
 
-    //    @Value("${jwt.secretKey}")
-    private static final String secretKey = "verylongsecretkey_verylongsecretkey";
+    @Autowired
+    private JwtConstants jwtConstants;
 
-    //    @Value("${jwt.expirationdays}")
-    private static final Integer days = 7;
+    public String generateNewJwtToken(String username) {
 
-    public static String generateNewJwtToken(String username) {
-
-        SecretKey key = Keys.hmacShaKeyFor(secretKey.getBytes(StandardCharsets.UTF_8));
+        SecretKey key = Keys.hmacShaKeyFor(jwtConstants.JWT_SECRET.getBytes(StandardCharsets.UTF_8));
 
         return Jwts.builder()
-                .setIssuer("me")
+                .setIssuer("me") // TODO: change
                 .setSubject(username)
-                .setAudience("you")
-                .setExpiration(java.sql.Date.valueOf(LocalDate.now().plusDays(days)))
+                .setAudience("you")   // TODO: change
+                .setExpiration(java.sql.Date.valueOf(LocalDate.now().plusDays(jwtConstants.JWT_EXPIRATIONDAYS)))
                 .setIssuedAt(Date.from(Instant.now()))
                 .signWith(key)
                 .compact();
     }
 
-    public static String extractDataFromJwtToken(String token) {
+    public String extractDataFromJwtToken(String token) {
 
-        SecretKey key = Keys.hmacShaKeyFor(secretKey.getBytes(StandardCharsets.UTF_8));
+        SecretKey key = Keys.hmacShaKeyFor(jwtConstants.JWT_SECRET.getBytes(StandardCharsets.UTF_8));
 
         Jws<Claims> claims = Jwts.parserBuilder()
                 .setSigningKey(key)

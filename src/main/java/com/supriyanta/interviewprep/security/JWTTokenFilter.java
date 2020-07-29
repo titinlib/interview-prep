@@ -1,8 +1,10 @@
 package com.supriyanta.interviewprep.security;
 
+import com.supriyanta.interviewprep.constants.JwtConstants;
 import com.supriyanta.interviewprep.util.JwtUtil;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.GrantedAuthority;
@@ -18,33 +20,33 @@ import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.util.List;
 
-@Slf4j
 @Component
+@Slf4j
 public class JWTTokenFilter extends OncePerRequestFilter {
 
-    //    @Value("${jwt.authorizationHeaderString}")
-    private final String authorizationHeaderString = "Authorization";
-
-    //    @Value("${jwt.tokenPrefix}")
-    private final String tokenPrefix = "Bearer ";
+    @Autowired
+    private JwtConstants jwtConstants;
 
     @Autowired
     private MyUserDetailsService userDetailsService;
+
+    @Autowired
+    private JwtUtil jwtUtil;
 
     @Override
     protected void doFilterInternal(HttpServletRequest httpServletRequest,
                                     HttpServletResponse httpServletResponse,
                                     FilterChain filterChain) throws ServletException, IOException {
 
-        String bearerToken = httpServletRequest.getHeader(authorizationHeaderString);
+        String bearerToken = httpServletRequest.getHeader(jwtConstants.JWT_AUTHORIZATION_HEADER_STRING);
 
         String username = null;
 
-        if (bearerToken != null && bearerToken.startsWith(tokenPrefix)) {
-            String token = bearerToken.replace(tokenPrefix, "");
+        if (bearerToken != null && bearerToken.startsWith(jwtConstants.JWT_TOKEN_PREFIX)) {
+            String token = bearerToken.replace(jwtConstants.JWT_TOKEN_PREFIX, "");
 
             try {
-                username = JwtUtil.extractDataFromJwtToken(token);
+                username = jwtUtil.extractDataFromJwtToken(token);
             } catch (Exception e) {
                 log.warn("JWT exception!", e);
             }
