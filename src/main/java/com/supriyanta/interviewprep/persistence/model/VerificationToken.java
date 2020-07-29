@@ -2,6 +2,8 @@ package com.supriyanta.interviewprep.persistence.model;
 
 import lombok.Getter;
 import lombok.Setter;
+import org.hibernate.annotations.OnDelete;
+import org.hibernate.annotations.OnDeleteAction;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
@@ -20,8 +22,11 @@ public class VerificationToken implements Serializable {
     @NotNull
     private String token;
 
-    @OneToOne(targetEntity = AccountUser.class, fetch = FetchType.EAGER)
+    @OneToOne(targetEntity = AccountUser.class,
+            fetch = FetchType.EAGER
+            )
     @JoinColumn(name = "user_id", nullable = false)
+    @OnDelete(action = OnDeleteAction.CASCADE)
     private AccountUser user;
 
     public VerificationToken(String token, AccountUser user) {

@@ -1,9 +1,10 @@
 package com.supriyanta.interviewprep.service;
 
-import com.supriyanta.interviewprep.dto.ResponseDto;
 import com.supriyanta.interviewprep.dto.UserDto;
 import com.supriyanta.interviewprep.persistence.model.AccountUser;
+import com.supriyanta.interviewprep.persistence.model.VerificationToken;
 import com.supriyanta.interviewprep.persistence.repository.AccountUserRepository;
+import com.supriyanta.interviewprep.persistence.repository.VerificationTokenRepository;
 import com.supriyanta.interviewprep.security.UsernameAndPasswordRequest;
 import com.supriyanta.interviewprep.util.JwtUtil;
 import lombok.extern.slf4j.Slf4j;
@@ -36,10 +37,16 @@ public class AccountUserService {
     @Autowired
     private AccountUserRepository accountUserRepository;
 
+    @Autowired
+    private VerificationTokenRepository verificationTokenRepository;
+
     public AccountUser registerUser(UserDto user) throws Exception {
+
         if (userExists(user)) {
+            log.info(user.toString());
             throw new Exception("User with this email already exists!");
         }
+
         AccountUser saveUser = new AccountUser();
         saveUser.setEmail(user.getEmail());
         saveUser.setName(user.getName());
@@ -63,15 +70,15 @@ public class AccountUserService {
 
     private void authenticateRequest(UsernameAndPasswordRequest authRequest) {
 
-            Authentication authentication = authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(
-                    authRequest.getEmail(),
-                    authRequest.getPassword()
-            ));
-            log.info(authentication.toString());
+        Authentication authentication = authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(
+                authRequest.getEmail(),
+                authRequest.getPassword()
+        ));
+        log.info(authentication.toString());
 
-            if(authentication.isAuthenticated() != true) {
-                throw new BadCredentialsException("Bad Credentials");
-            }
+        if (authentication.isAuthenticated() != true) {
+            throw new BadCredentialsException("Bad Credentials");
+        }
     }
 
     public Optional<AccountUser> findUserByEmail(String email) {
@@ -81,5 +88,24 @@ public class AccountUserService {
     // TODO: use PreAuthorize before accessing this method
     public List<AccountUser> findAllUser() {
         return accountUserRepository.findAll();
+    }
+
+    public void confirmRegistration(String token) {
+        Optional<VerificationToken> tokenExists = verificationTokenRepository.findByToken(token);
+
+        VerificationToken verificationToken = tokenExists
+                .orElseThrow(() -> new IllegalStateException("Token not found!"));
+
+        AccountUser user = verificationToken.getUser();
+
+        user.setEnabled(true);
+
+        accountUserRepository.save(user);
+
+        verificationTokenRepository.deleteById(verificationToken.getId());
+    }
+
+    public void deleteUser(AccountUser user) {
+        accountUserRepository.deleteById(user.getId());
     }
 }

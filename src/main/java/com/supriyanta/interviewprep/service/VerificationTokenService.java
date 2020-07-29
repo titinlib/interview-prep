@@ -17,10 +17,15 @@ public class VerificationTokenService {
     private VerificationTokenRepository verificationTokenRepository;
 
     public VerificationToken createTokenWithUser(AccountUser user) {
+
         String token = UUID.randomUUID().toString();
 
         VerificationToken verificationToken = new VerificationToken(token, user);
 
         return verificationTokenRepository.save(verificationToken);
+    }
+
+    public void deleteToken(VerificationToken token) {
+        verificationTokenRepository.deleteById(token.getId());
     }
 }

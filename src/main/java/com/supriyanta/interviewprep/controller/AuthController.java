@@ -8,10 +8,12 @@ import com.supriyanta.interviewprep.event.UserRegistrationEvent;
 import com.supriyanta.interviewprep.persistence.model.AccountUser;
 import com.supriyanta.interviewprep.security.UsernameAndPasswordRequest;
 import com.supriyanta.interviewprep.service.AccountUserService;
+import com.supriyanta.interviewprep.service.EmailService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.http.HttpStatus;
+import org.springframework.mail.SimpleMailMessage;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
@@ -21,6 +23,9 @@ import java.util.List;
 @RequestMapping("/auth")
 @Slf4j
 public class AuthController {
+
+    @Autowired
+    private EmailService emailService;
 
     @Autowired
     private ApplicationEventPublisher applicationEventPublisher;
@@ -57,6 +62,7 @@ public class AuthController {
             return new ResponseDto<>(new UserResponseDto(newUser), HttpStatus.CREATED);
 
         } catch (Exception exception) {
+            log.warn(exception.toString());
             throw new Exception();
         }
     }
@@ -69,5 +75,27 @@ public class AuthController {
         String jwtToken = accountUserService.authenticateUser(authRequest);
 
         return new ResponseDto<>(new JwtDto(jwtToken), HttpStatus.ACCEPTED);
+    }
+
+    @GetMapping("/confirm")
+    public String confirmRegistratiion(@RequestParam String token) {
+        accountUserService.confirmRegistration(token);
+        return "Email Confirmed!";
+    }
+
+    @GetMapping("/email")
+    public Boolean sendMail() {
+        try {
+            SimpleMailMessage email = new SimpleMailMessage();
+            email.setTo("supriyanta34@gmail.com");
+            email.setSubject("test");
+            email.setText("Blank");
+
+            emailService.sendSimpleMail(email);
+        } catch (Exception ex) {
+            log.warn(ex.toString());
+        }
+
+        return true;
     }
 }
